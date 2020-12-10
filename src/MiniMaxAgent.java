@@ -4,7 +4,6 @@ public class MiniMaxAgent {
 
     public static final long TIME_FOR_MOVE = 3000;
 
-    private GameInfo gameInfo;
     private PlayerInfo playerInfo;
 
     private ArrayList<Integer> availablePositions;
@@ -14,24 +13,32 @@ public class MiniMaxAgent {
     private ArrayList<Cell> enemyPositions;
 
 
-    public MiniMaxAgent(PlayerInfo playerInfo, GameInfo gameInfo) {
+    public MiniMaxAgent(PlayerInfo playerInfo) {
         this.playerInfo = playerInfo;
-        this.gameInfo = gameInfo;
-
     }
 
-    public int[] MinimaxDecision(){
-        int[] res = new int[2];
+//    public double Max(){
+//
+//    }
+//
+//    public double Min(){
+//
+//    }
 
+    public Move MinimaxDecision(Board board){
+        double min = Double.NEGATIVE_INFINITY;
+        double max = Double.POSITIVE_INFINITY;
+
+        ArrayList<Move> availableMoves = board.findAllMoves(playerInfo.getColor());
+        Move res = availableMoves.get(0);
+
+        for(Move move: availableMoves){
+            //double currentValue = Min();
+
+            //double value = currentValue
+        }
 
         return res;
     }
 
-
-    private ArrayList<Move> successor(String playerColor, Board board) {
-        ArrayList<Move> result = new ArrayList<>();
-
-
-        return result;
-    }
 }

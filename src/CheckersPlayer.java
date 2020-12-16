@@ -47,42 +47,42 @@ public class CheckersPlayer implements Runnable{
         System.out.println(out);
     }
 
-    private void playGame() throws IOException {
+    private void playGame() throws IOException, InterruptedException {
         getGameInfo();
         Board board = new Board(gameInfo);
 
         MiniMaxAgent agent = new MiniMaxAgent(playerInfo);
-        int i = 0;
-        while(gameInfo.is_started() && !gameInfo.is_finished()){
-            //update game info
-            getGameInfo();
-            board = new Board(gameInfo);
 
-            if(!gameInfo.getWhose_turn().equals(playerInfo.getColor()))
-                continue;
+        while(gameInfo.is_started() && !gameInfo.is_finished()){
+            if(!gameInfo.getWhose_turn().equals(playerInfo.getColor())){
+                Thread.sleep(1000);
+            }
             else{
-                i++;
                 //your move
-                agent.MinimaxDecision(board);
+                Move move = agent.MinimaxDecision(board);
+                System.out.println("Move : " + move.toString());
+                move(move.getFrom(), move.getTo());
             }
 
+            getGameInfo();
+            board = new Board(gameInfo);
         }
     }
 
-//    public static void main(String[] args) throws IOException {
-//
-//        Thread first = new Thread(new CheckersPlayer());
-//        Thread second = new Thread(new CheckersPlayer());
-//
-//        first.start();
-//        second.start();
-//    }
-
     public static void main(String[] args) throws IOException {
-        CheckersPlayer player = new CheckersPlayer();
-        player.playGame();
 
+        Thread first = new Thread(new CheckersPlayer());
+        Thread second = new Thread(new CheckersPlayer());
+
+        first.start();
+        second.start();
     }
+
+//    public static void main(String[] args) throws IOException, InterruptedException {
+//        CheckersPlayer player = new CheckersPlayer();
+//        player.playGame();
+//
+//    }
 
     @Override
     public void run() {
@@ -90,7 +90,7 @@ public class CheckersPlayer implements Runnable{
             connectToGame();
             playGame();
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

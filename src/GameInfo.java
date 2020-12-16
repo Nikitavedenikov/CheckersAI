@@ -72,6 +72,17 @@ class Cell{
         this.position = position;
     }
 
+    public void updatePosition(Cell newCell){
+        this.row = newCell.getRow();
+        this.column = newCell.getColumn();
+        this.position = newCell.getPosition();
+    }
+
+    public void clearCell(){
+        this.color = "EMPTY";
+        this.king = false;
+    }
+
     public String getColor() {
         return color;
     }
@@ -90,5 +101,10 @@ class Cell{
 
     public int getPosition() {
         return position;
+    }
+
+    public void updateCell(Cell cell) {
+        this.color = cell.getColor();
+        this.king = cell.isKing();
     }
 }

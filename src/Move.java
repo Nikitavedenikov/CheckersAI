@@ -2,17 +2,20 @@ public class Move {
     private int from;
     private int to;
     private boolean isEbashylovo;
+    private int killPosition;
 
     public Move(int from, int to) {
         this.from = from;
         this.to = to;
         this.isEbashylovo = false;
+        killPosition = -1;
     }
 
-    public Move(int from, int to, boolean isEbashylovo) {
+    public Move(int from, int to, boolean isEbashylovo, int killPosition) {
         this.from = from;
         this.to = to;
         this.isEbashylovo = isEbashylovo;
+        this.killPosition = killPosition;
     }
 
     public int getFrom() {
@@ -37,6 +40,14 @@ public class Move {
 
     public void setEbashylovo(boolean ebashylovo) {
         isEbashylovo = ebashylovo;
+    }
+
+    public int getKillPosition() {
+        return killPosition;
+    }
+
+    public void setKillPosition(int killPosition) {
+        this.killPosition = killPosition;
     }
 
     @Override

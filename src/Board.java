@@ -53,6 +53,7 @@ public class Board implements Cloneable{
         try {
             res = (Board)this.clone();
 
+            //TODO: wrong ebashylovo moves
             if(move.isEbashylovo()){
                 res.board[move.getKillPosition()-1].clearCell();
             }
@@ -153,8 +154,9 @@ ____________$$$$$$$$
 
                     if(n_cell.getColor().equals(enemyColor)){
                         //↙↘           daun one more
-                        col = getDown(row,cell.getColumn());
+
                         row += rowChange;
+                        col = getDown(row,cell.getColumn());
                         pos = getPosition(row,col);
 
                         if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE){
@@ -181,8 +183,8 @@ ____________$$$$$$$$
 
                     if(n_cell.getColor().equals(enemyColor)){
                         //↖↗           BBePx one more
-                        col = getUp(row,col);
                         row += rowChange;
+                        col = getUp(row,col);
                         pos = getPosition(row,col);
                         if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE) {
                             n_cell = board[pos - 1];

@@ -37,6 +37,8 @@ public class MiniMaxAgent {
     }
 
     public double Min(int depth, Board board, double maxValue){
+        System.out.println("");
+
         //check depth
         if(depth==0)
             return getUtility(board);

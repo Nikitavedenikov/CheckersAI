@@ -1,7 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.io.*;
+import java.io.IOException;
 
 public class CheckersPlayer implements Runnable{
 

@@ -1,0 +1,11 @@
+Cell.class
+MiniMaxAgent.class
+Board$Func.class
+Board.class
+GameInfo.class
+Board$Direction.class
+HttpGet.class
+Move.class
+HttpPostRaw.class
+PlayerInfo.class
+CheckersPlayer.class

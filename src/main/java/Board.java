@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.function.Function;
 
 public class Board implements Cloneable{
     private Cell[] board;

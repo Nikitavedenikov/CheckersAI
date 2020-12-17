@@ -49,10 +49,10 @@ public class CheckersPlayer implements Runnable{
 
     private void playGame() throws IOException, InterruptedException {
         getGameInfo();
-        Board board = new Board(gameInfo);
+        Board board = new Board(gameInfo.getBoard());
 
-        MiniMaxAgent agent = new MiniMaxAgent(playerInfo);
-
+        agent = new MiniMaxAgent(playerInfo);
+        //System.out.println("play game" + gameInfo.getStatus());
         while(gameInfo.is_started() && !gameInfo.is_finished()){
             if(!gameInfo.getWhose_turn().equals(playerInfo.getColor())){
                 Thread.sleep(1000);
@@ -65,7 +65,7 @@ public class CheckersPlayer implements Runnable{
             }
 
             getGameInfo();
-            board = new Board(gameInfo);
+            board = new Board(gameInfo.getBoard());
         }
     }
 

@@ -63,6 +63,9 @@ class Cell{
     public void setKing(boolean king) {
         this.king = king;
     }
+    public Cell(Cell c) {
+        this(c.getColor(), c.getRow(), c.getColumn(), c.isKing(), c.getPosition());
+    }
 
     public Cell(String color, int row, int column, boolean king, int position) {
         this.color = color;

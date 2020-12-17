@@ -1,17 +1,25 @@
 import java.util.ArrayList;
 
-public class Board implements Cloneable{
+public class Board {
     private Cell[] board;
     public final int R_SIZE = 8;
     public final int C_SIZE = 4;
 
 
-    private double[] coef = { 5, 7.75, 4, 2.5, 0.5, -3, 3 };
+    private final double[] coef = { 5, 7.75, 4, 2.5, 0.5, -3, 3 };
 
-    public Board(GameInfo gameInfo){
+    public Board (Board b){
+        Cell[] arr = new Cell[b.board.length];
+        for (int i = 0; i < b.board.length; i++) {
+            arr[i] = new Cell(b.board[i]);
+        }
+        this.board = arr;
+    }
+
+    public Board(Cell[] cells){
 
         board = new Cell[R_SIZE*C_SIZE];
-        for (Cell cell: gameInfo.getBoard() ) {
+        for (Cell cell: cells ) {
             board[cell.getPosition()-1] = cell;
 
         }
@@ -33,38 +41,20 @@ public class Board implements Cloneable{
                     board[pos-1] = new Cell("EMPTY", i, j,false,pos);
             }
         }
-
-//        board[17] = board[4];
-//        board[4] = new Cell("EMPTY", 1, 0,false,5);
-//        board[22].setKing(true);
-//
-//        ArrayList<Move> moves = findMoves("BLACK", board[22]);
-//
-//        System.out.println("MOVES : \n");
-//        for (Move move:
-//             moves) {
-//            System.out.println("\n" + move);
-//        }
     }
 
     public Board makeMove(Move move){
-        Board res = null;
-        try {
-            res = (Board)this.clone();
+        Board res = new Board(this);
 
-            //TODO: wrong ebashylovo moves
-            if(move.isEbashylovo()){
-                res.board[move.getKillPosition()-1].clearCell();
-            }
-
-            //TODO: check if checker becomes king
-
-            res.board[move.getTo()-1].updateCell(res.board[move.getFrom()-1]);
-            res.board[move.getFrom()-1].clearCell();
-
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        if(move.isEbashylovo()){
+            res.board[move.getKillPosition()-1].clearCell();
         }
+
+        res.board[move.getTo()-1].updateCell(res.board[move.getFrom()-1]);
+        res.board[move.getFrom()-1].clearCell();
+
+        if (move.getTo()== 7 || move.getTo()==0)
+            res.board[move.getTo()-1].setKing(true);
 
         return res;
     }
@@ -147,15 +137,16 @@ ____________$$$$$$$$
                 //↙↘           daun
                 int col = getDown(cell.getRow(), cell.getColumn());
                 int pos = getPosition(row,col);
-                int killPos = pos;
+
                 if(col < C_SIZE ){
                     Cell n_cell = board[pos-1];
 
                     if(n_cell.getColor().equals(enemyColor)){
                         //↙↘           daun one more
+                        int killPos = pos;
 
+                        col = getDown(row,col);
                         row += rowChange;
-                        col = getDown(row,cell.getColumn());
                         pos = getPosition(row,col);
 
                         if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE){
@@ -176,14 +167,15 @@ ____________$$$$$$$$
                 row = cell.getRow() + rowChange;
                 col = getUp(cell.getRow(),cell.getColumn());
                 pos = getPosition(row,col);
-                killPos = pos;
                 if(col >=0){
                     Cell n_cell = board[pos-1];
 
                     if(n_cell.getColor().equals(enemyColor)){
                         //↖↗           BBePx one more
-                        row += rowChange;
+                        int killPos = pos;
+
                         col = getUp(row,col);
+                        row += rowChange;
                         pos = getPosition(row,col);
                         if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE) {
                             n_cell = board[pos - 1];
@@ -247,7 +239,7 @@ ____________$$$$$$$$
     private ArrayList<Move> findKingMoves(int startPos, int row, int col, String enemyColor, Direction dir){
         ArrayList<Move> result = new ArrayList<>();
 
-        int pos = -1;
+        int pos;
         int killPos = -1;
         boolean isAttack = false;
 
@@ -317,13 +309,13 @@ ____________$$$$$$$$
     __________$$$$$$$$$$$$$$$$$$________
      */
     public double getHeuristic(){
-        // Index 0: Number of pawns --- 5
-        // Index 1: Number of kings --- 7.75
-        // Index 2: Number in back row --- 4
-        // Index 3: Number in middle box --- 2.5
-        // Index 4: Number in middle 2 rows, not box --- 0.5
-        // Index 5: Number that can be taken this turn --- -3
-        // Index 6: Number that are protected --- 3
+        // 0: pawns --- 5
+        // 1: kings --- 7.75
+        // 2: back row --- 4
+        // 3: middle box --- 2.5
+        // 4: middle 2 rows, not box --- 0.5
+        // 5: can be taken this turn --- -3
+        // 6: protected --- 3
         int[] res = new int[7];
 
         for (Cell cell : board){
@@ -454,11 +446,6 @@ ____________$$$$$$$$
         return sum;
     }
 
-    protected Board clone() throws CloneNotSupportedException {
-        Board cloneObject = (Board)super.clone();
-        cloneObject.board = this.board.clone();
-        return cloneObject;
-    }
 
     @FunctionalInterface
     public interface Func {

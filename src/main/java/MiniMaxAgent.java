@@ -10,7 +10,45 @@ public class MiniMaxAgent {
         this.playerInfo = playerInfo;
     }
 
-    public double Max(int depth, Board board, double minValue){
+    public Move MinimaxDecision(Board board){
+        double value = Double.NEGATIVE_INFINITY;
+
+        ArrayList<Move> availableMoves = board.findAllMoves(playerInfo.getColor());
+        Move res = availableMoves.get(0);
+
+        if(availableMoves.stream().anyMatch(Move::isEbashylovo)) {
+            for (Move move : availableMoves) {
+                if(!move.isEbashylovo())
+                    continue;
+                ArrayList< Move> arr = new ArrayList<>();
+                arr.add(move);
+                Board copy  = board.makeMove(move);
+                //System.out.println("sda");
+                double currentValue = Min(5, copy, value, arr);
+                if(currentValue > value){
+                    value = currentValue;
+                    res = move;
+                }
+            }
+        }else{
+            for(Move move: availableMoves){
+                ArrayList< Move> arr = new ArrayList<>();
+                arr.add(move);
+                Board copy  = board.makeMove(move);
+                //System.out.println("sda");
+                double currentValue = Min(5, copy, value, arr );
+                if(currentValue > value){
+                    value = currentValue;
+                    res = move;
+                }
+            }
+        }
+
+
+        return res;
+    }
+
+    public double Max(int depth, Board board, double minValue, ArrayList<Move> movesBefore){
 
         //check depth
         if(depth==0)
@@ -20,15 +58,18 @@ public class MiniMaxAgent {
 
         //find available moves
         //TODO: remove .equals
-        ArrayList<Move> availableMoves = board.findAllMoves(playerInfo.getColor().equals("RED") ? "BLACK" : "RED");
+        ArrayList<Move> availableMoves = board.findAllMoves(playerInfo.getColor());
 
-        if(availableMoves.size()==0)
-            System.out.println("No available moves");
+//        if(availableMoves.size()==0)
+//            System.out.println("No available moves");
+
 
         //for each call min and find max
         for(Move move: availableMoves){
-            value = Double.max(value,Min(depth-1, board.makeMove(move), value));
-            System.out.println("max : " + value);
+            ArrayList<Move> clone = (ArrayList<Move>) movesBefore.clone();
+            clone.add(move);
+            value = Double.max(value,Min(depth-1,  board.makeMove(move), value, clone));
+            //System.out.println("max : " + value);
             if(value>minValue) break;
         }
 
@@ -36,8 +77,8 @@ public class MiniMaxAgent {
         return value;
     }
 
-    public double Min(int depth, Board board, double maxValue){
-        System.out.println("");
+    public double Min(int depth, Board board, double maxValue, ArrayList<Move> movesBefore){
+        //System.out.println("");
 
         //check depth
         if(depth==0)
@@ -50,11 +91,13 @@ public class MiniMaxAgent {
         ArrayList<Move> availableMoves = board.findAllMoves(playerInfo.getColor().equals("RED") ? "BLACK" : "RED");
 
         if(availableMoves.size()==0)
-            System.out.println("No available moves");
+            //System.out.println("No available moves");
         //for each call max and find min
         for(Move move: availableMoves){
-            value = Double.min(value,Max(depth-1, board.makeMove(move), value));
-            System.out.println("min : " + value);
+            ArrayList<Move> clone = (ArrayList<Move>) movesBefore.clone();
+            clone.add(move);
+            value = Double.min(value,Max(depth-1,  board.makeMove(move), value, clone));
+            //System.out.println("min : " + value);
             if(value<maxValue) break;
         }
 
@@ -62,36 +105,6 @@ public class MiniMaxAgent {
         return value;
     }
 
-    public Move MinimaxDecision(Board board){
-        double value = Double.NEGATIVE_INFINITY;
-
-        ArrayList<Move> availableMoves = board.findAllMoves(playerInfo.getColor());
-        Move res = availableMoves.get(0);
-
-        if(availableMoves.stream().anyMatch(Move::isEbashylovo)) {
-            for (Move move : availableMoves) {
-                if(!move.isEbashylovo())
-                    continue;
-
-                double currentValue = Min(5, board.makeMove(move), value);
-                if(currentValue > value){
-                    value = currentValue;
-                    res = move;
-                }
-            }
-        }else{
-            for(Move move: availableMoves){
-                double currentValue = Min(5, board.makeMove(move), value);
-                if(currentValue > value){
-                    value = currentValue;
-                    res = move;
-                }
-            }
-        }
-
-
-        return res;
-    }
 
     private double getUtility(Board board){
         return playerInfo.getColor().equals("RED") ? board.getHeuristic() : -board.getHeuristic();

@@ -126,86 +126,229 @@ ____________$$$$$$$$
     public ArrayList<Move> findMoves(String playerColor, Cell cell) {
         ArrayList<Move> result = new ArrayList<>();
         //find valid not ling moves
-        int rowChange = playerColor.equals("RED") ? 1 : -1;
-        String enemyColor = rowChange == 1 ? "BLACK" : "RED";
+        String enemyColor = playerColor.equals("RED") ? "BLACK" : "RED";
+        Move move;
 
         if(!cell.isKing()){
-
-            int row = cell.getRow() + rowChange;
-            if(row >= 0 && row < R_SIZE){
-
-                //↙↘           daun
-                int col = getDown(cell.getRow(), cell.getColumn());
-                int pos = getPosition(row,col);
-
-                if(col < C_SIZE ){
-                    Cell n_cell = board[pos-1];
-
-                    if(n_cell.getColor().equals(enemyColor)){
-                        //↙↘           daun one more
-                        int killPos = pos;
-
-                        col = getDown(row,col);
-                        row += rowChange;
-                        pos = getPosition(row,col);
-
-                        if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE){
-                            n_cell = board[pos-1];
-
-                            //if empty make move
-                            if(n_cell.getColor().equals("EMPTY")){
-                                result.add(new Move(cell.getPosition(), pos, true,killPos));
-                            }
-                        }
-
-                    }else if(n_cell.getColor().equals("EMPTY")){
-                        result.add(new Move(cell.getPosition(), pos));
-                    }
-                }
-
-                //↖↗           BBePx
-                row = cell.getRow() + rowChange;
-                col = getUp(cell.getRow(),cell.getColumn());
-                pos = getPosition(row,col);
-                if(col >=0){
-                    Cell n_cell = board[pos-1];
-
-                    if(n_cell.getColor().equals(enemyColor)){
-                        //↖↗           BBePx one more
-                        int killPos = pos;
-
-                        col = getUp(row,col);
-                        row += rowChange;
-                        pos = getPosition(row,col);
-                        if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE) {
-                            n_cell = board[pos - 1];
-
-                            //if empty make move
-                            if (n_cell.getColor().equals("EMPTY")) {
-                                result.add(new Move(cell.getPosition(), pos, true, killPos));
-                            }
-                        }
-                    }else if(n_cell.getColor().equals("EMPTY")){
-                        result.add(new Move(cell.getPosition(), pos));
-                    }
-                }
+            if(cell.getColor().equals("RED")){
+                //↗           BBePx
+                move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpRight);
+                if(move!=null)
+                    result.add(move);
+                //↘           daun
+                move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownRight);
+                if(move!=null)
+                    result.add(move);
+            }else{
+                //↖           BBePx
+                move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpLeft);
+                if(move!=null)
+                    result.add(move);
+                //↙           daun
+                move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownLeft);
+                if(move!=null)
+                    result.add(move);
             }
+//            int row = cell.getRow() + rowChange;
+//            if(row >= 0 && row < R_SIZE){
+//
+//                //↙↘           daun
+//                int col = getDown(cell.getRow(), cell.getColumn());
+//                int pos = getPosition(row,col);
+//
+//                if(col < C_SIZE ){
+//                    Cell n_cell = board[pos-1];
+//
+//                    if(n_cell.getColor().equals(enemyColor)){
+//                        //↙↘           daun one more
+//                        int killPos = pos;
+//
+//                        col = getDown(row,col);
+//                        row += rowChange;
+//                        pos = getPosition(row,col);
+//
+//                        if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE){
+//                            n_cell = board[pos-1];
+//
+//                            //if empty make move
+//                            if(n_cell.getColor().equals("EMPTY")){
+//                                result.add(new Move(cell.getPosition(), pos, true,killPos));
+//                            }
+//                        }
+//
+//                    }else if(n_cell.getColor().equals("EMPTY")){
+//                        result.add(new Move(cell.getPosition(), pos));
+//                    }
+//                }
+//
+//                //↖↗           BBePx
+//                row = cell.getRow() + rowChange;
+//                col = getUp(cell.getRow(),cell.getColumn());
+//                pos = getPosition(row,col);
+//                if(col >=0){
+//                    Cell n_cell = board[pos-1];
+//
+//                    if(n_cell.getColor().equals(enemyColor)){
+//                        //↖↗           BBePx one more
+//                        int killPos = pos;
+//
+//                        col = getUp(row,col);
+//                        row += rowChange;
+//                        pos = getPosition(row,col);
+//                        if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE) {
+//                            n_cell = board[pos - 1];
+//
+//                            //if empty make move
+//                            if (n_cell.getColor().equals("EMPTY")) {
+//                                result.add(new Move(cell.getPosition(), pos, true, killPos));
+//                            }
+//                        }
+//                    }else if(n_cell.getColor().equals("EMPTY")){
+//                        result.add(new Move(cell.getPosition(), pos));
+//                    }
+//                }
+//            }
 
         }else{
-//            find valid king moves
+            //find valid king moves
             //↗           BBePx
-            result.addAll(findKingMoves(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpRight));
+            move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpRight);
+            if(move!=null)
+                result.add(move);
             //↘           daun
-            result.addAll(findKingMoves(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownRight));
+            move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownRight);
+            if(move!=null)
+                result.add(move);
             //↖           BBePx
-            result.addAll(findKingMoves(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpLeft));
+            move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpLeft);
+            if(move!=null)
+                result.add(move);
             //↙           daun
-            result.addAll(findKingMoves(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownLeft));
-
+            move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownLeft);
+            if(move!=null)
+                result.add(move);
         }
 
 
         return result;
+    }
+
+
+    private Move findMove(int startPos, int row, int col, String enemyColor, Direction dir){
+        int pos;
+        int killPos;
+
+        int rowChange = (dir == Direction.DownLeft) || (dir == Direction.UpLeft) ? -1 : 1;
+
+        Func func =(dir == Direction.UpRight) || (dir == Direction.UpLeft) ? this::getUp : this::getDown;
+        int i = row + rowChange, j = func.method(row,col);
+        if(i < R_SIZE && i >=0 && j>=0 && j < C_SIZE){
+            pos = getPosition(i,j);
+            if(board[pos-1].getColor().equals("EMPTY")){
+                return new Move(startPos, pos);
+            }else if(board[pos-1].getColor().equals(enemyColor)){
+                //Move one more
+
+
+                j = func.method(i, j);
+                i+= rowChange;
+
+                if(i < R_SIZE && i>=0 && j >= 0 && j < C_SIZE) {
+
+                    killPos = pos;
+                    pos = getPosition(i, j);
+
+                    //if empty make move
+                    if (board[pos - 1].getColor().equals("EMPTY")) {
+                        return new Move(startPos, pos, true, killPos);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public ArrayList<Move> findAttackMoves(int position){
+        ArrayList<Move> result = new ArrayList<>();
+        Cell cell = board[position-1];
+
+        String enemyColor = cell.getColor().equals("RED") ? "BLACK" : "RED";
+        Move move;
+
+        if(!cell.isKing()){
+            if(cell.getColor().equals("RED")){
+                //↗           BBePx
+                move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpRight);
+                if(move!=null)
+                    result.add(move);
+                //↘           daun
+                move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownRight);
+                if(move!=null)
+                    result.add(move);
+            }else{
+                //↖           BBePx
+                move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpLeft);
+                if(move!=null)
+                    result.add(move);
+                //↙           daun
+                move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownLeft);
+                if(move!=null)
+                    result.add(move);
+            }
+        }else{
+            //find valid king moves
+            //↗           BBePx
+            move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpRight);
+            if(move!=null)
+                result.add(move);
+            //↘           daun
+            move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownRight);
+            if(move!=null)
+                result.add(move);
+            //↖           BBePx
+            move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpLeft);
+            if(move!=null)
+                result.add(move);
+            //↙           daun
+            move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.DownLeft);
+            if(move!=null)
+                result.add(move);
+        }
+
+        return result;
+    }
+
+    public Move findAttackMove(int startPos, int row, int col, String enemyColor, Direction dir){
+        int pos;
+        int killPos;
+
+        int rowChange = (dir == Direction.DownLeft) || (dir == Direction.UpLeft) ? -1 : 1;
+
+        Func func =(dir == Direction.UpRight) || (dir == Direction.UpLeft) ? this::getUp : this::getDown;
+        int i = row + rowChange, j = func.method(row,col);
+        if(i < R_SIZE && i >=0 && j>=0 && j < C_SIZE){
+            pos = getPosition(i,j);
+            if(board[pos-1].getColor().equals(enemyColor)){
+                //Move one more
+
+                j = func.method(i, j);
+                i+= rowChange;
+
+                if(i < R_SIZE && i>=0 && j >= 0 && j < C_SIZE) {
+
+                    killPos = pos;
+                    pos = getPosition(i, j);
+
+                    //if empty make move
+                    if (board[pos - 1].getColor().equals("EMPTY")) {
+                        return new Move(startPos, pos, true, killPos);
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     private enum Direction{
@@ -215,72 +358,6 @@ ____________$$$$$$$$
         DownLeft
     }
 
-
-    /*
-                                          /;    ;\
-                                      __  \\____//
-                                     /{_\_/   `'\____
-                                     \___   (o)  (o  }
-          _____________________________/          :--'
-      ,-,'`@@@@@@@@       @@@@@@         \_    `__\
-     ;:(  @@@@@@@@@        @@@             \___(o'o)
-     :: )  @@@@          @@@@@@        ,'@@(  `===='
-     :: : @@@@@:          @@@@         `@@@:
-     :: \  @@@@@:       @@@@@@@)    (  '@@@'
-     ;; /\      /`,    @@@@@@@@@\   :@@@@@)
-     ::/  )    {_----------------:  :~`,~~;
-    ;;'`; :   )                  :  / `; ;
-    ;;;; : :   ;                  :  ;  ; :
-    `'`' / :  :                   :  :  : :
-       )_ \__;      ";"          :_ ;  \_\       `,','
-       :__\  \    * `,'*         \  \  :  \   *  8`;'*
-           `^'     \ :/           `^'  `-^-'   \v/ :
-    */
-    private ArrayList<Move> findKingMoves(int startPos, int row, int col, String enemyColor, Direction dir){
-        ArrayList<Move> result = new ArrayList<>();
-
-        int pos;
-        int killPos = -1;
-        boolean isAttack = false;
-
-        int rowChange = (dir == Direction.DownLeft) || (dir == Direction.UpLeft) ? -1 : 1;
-
-        Func func =(dir == Direction.UpRight) || (dir == Direction.UpLeft) ? this::getUp : this::getDown;
-
-        for (int i = row + rowChange, j = func.method(row,col); i < R_SIZE && i >=0 && j>=0 && j < C_SIZE; j = func.method(i, j), i+=rowChange) {
-            pos = getPosition(i,j);
-            if(board[pos-1].getColor().equals("EMPTY")){
-                result.add(new Move(startPos, pos, isAttack,killPos));
-            }else if(board[pos-1].getColor().equals(enemyColor)){
-                //Move one more
-
-                if(isAttack)
-                    break;
-
-                j = func.method(i, j);
-                i+= rowChange;
-
-                if(i >= R_SIZE || i<0 || j < 0 || j >= C_SIZE)
-                    break;
-
-                killPos = pos;
-                pos = getPosition(i,j);
-
-                //if empty make move
-                if(board[pos-1].getColor().equals("EMPTY")){
-                    result.add(new Move(startPos, pos, true,killPos));
-                    //mark all next moves as attack
-                    isAttack = true;
-                }else{
-                    break;
-                }
-            }else{
-                break;
-            }
-        }
-
-        return result;
-    }
 
     /*
     _$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -361,6 +438,14 @@ ____________$$$$$$$$
                                         && board[upLeft].getColor().equals("EMPTY")) {
                                     res[5]++;
                                 }
+                                if (board[upLeft].getColor().equals("BLACK") && board[upLeft].isKing()
+                                        && board[downRight].getColor().equals("EMPTY")) {
+                                    res[5]--;
+                                }
+                                if (board[downLeft].getColor().equals("BLACK") && board[downLeft].isKing()
+                                        && board[upRight].getColor().equals("EMPTY")) {
+                                    res[5]--;
+                                }
                             }
                         }
 
@@ -418,6 +503,14 @@ ____________$$$$$$$$
                                         && board[upRight].getColor().equals("EMPTY")) {
                                     res[5]--;
                                 }
+                                if (board[upRight].getColor().equals("RED") && board[upRight].isKing()
+                                        && board[downLeft].getColor().equals("EMPTY")) {
+                                    res[5]--;
+                                }
+                                if (board[downRight].getColor().equals("RED") && board[downRight].isKing()
+                                        && board[upLeft].getColor().equals("EMPTY")) {
+                                    res[5]--;
+                                }
                             }
                         }
 
@@ -427,6 +520,7 @@ ____________$$$$$$$$
                                 res[6]--;
                             }
                             else {
+                                //TODO: check
                                 if ((board[upRight].getColor().equals("BLACK") || !board[upRight].isKing()) &&
                                         (board[downRight].getColor().equals("BLACK") || !board[downRight].isKing())) {
                                     res[6]--;

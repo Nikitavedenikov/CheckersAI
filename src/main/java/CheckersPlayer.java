@@ -33,7 +33,7 @@ public class CheckersPlayer implements Runnable{
         Gson gson = new Gson();
         JsonObject obj = gson.fromJson(response, JsonObject.class).get("data").getAsJsonObject();
         gameInfo = gson.fromJson(obj, GameInfo.class);
-        //System.out.println(response);
+        System.out.println(response);
     }
 
     public void move(int from, int to) throws IOException {
@@ -50,7 +50,7 @@ public class CheckersPlayer implements Runnable{
     private void playGame() throws IOException, InterruptedException {
         getGameInfo();
         Board board = new Board(gameInfo.getBoard());
-
+        int depth = playerInfo.getColor().equals("RED") ? 9 : 8;
         agent = new MiniMaxAgent(playerInfo);
         //System.out.println("play game" + gameInfo.getStatus());
         while(gameInfo.is_started() && !gameInfo.is_finished()){
@@ -59,9 +59,11 @@ public class CheckersPlayer implements Runnable{
             }
             else{
                 //your move
-                Move move = agent.MinimaxDecision(board);
+                Move move = agent.MinimaxDecision(board,depth);
+
                 System.out.println("Move : " + move.toString());
                 move(move.getFrom(), move.getTo());
+                System.out.println("");
             }
 
             getGameInfo();

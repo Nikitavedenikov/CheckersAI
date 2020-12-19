@@ -4,16 +4,16 @@ public class MiniMaxAgent {
 
     public static final long TIME_FOR_MOVE = 3000;
 
-    private PlayerInfo playerInfo;
+    private CELL_COLOR playerColor;
 
     public MiniMaxAgent(PlayerInfo playerInfo) {
-        this.playerInfo = playerInfo;
+        playerColor = playerInfo.getColor();
     }
 
     public Move MinimaxDecision(Board board, int depth){
         double value = Double.NEGATIVE_INFINITY;
 
-        ArrayList<Move> availableMoves = board.findAllMoves(playerInfo.getColor());
+        ArrayList<Move> availableMoves = board.findAllMoves(playerColor);
         Move res = availableMoves.get(0);
 
         if(availableMoves.stream().anyMatch(Move::isEbashylovo)) {
@@ -63,10 +63,9 @@ public class MiniMaxAgent {
         double value = Double.NEGATIVE_INFINITY;
 
         //find available moves
-        //TODO: remove .equals
         ArrayList<Move> availableMoves;
         if(attackPos == -1)
-            availableMoves = board.findAllMoves(playerInfo.getColor());
+            availableMoves = board.findAllMoves(playerColor);
         else
             availableMoves = board.findAttackMoves(attackPos);
 
@@ -85,7 +84,7 @@ public class MiniMaxAgent {
         }
         else{
             if(attackPos!=-1)
-                availableMoves = board.findAllMoves(playerInfo.getColor());
+                availableMoves = board.findAllMoves(playerColor);
             //for each call min and find max
             for(Move move: availableMoves){
                 ArrayList<Move> clone = (ArrayList<Move>) movesBefore.clone();
@@ -112,9 +111,8 @@ public class MiniMaxAgent {
         ArrayList<Move> availableMoves;
 
         //find available moves
-        //TODO: remove .equals
         if(attackPos==-1)
-            availableMoves = board.findAllMoves(playerInfo.getColor().equals("RED") ? "BLACK" : "RED");
+            availableMoves = board.findAllMoves(playerColor == CELL_COLOR.RED ? CELL_COLOR.BLACK : CELL_COLOR.RED);
         else
             availableMoves = board.findAttackMoves(attackPos);
 
@@ -132,7 +130,7 @@ public class MiniMaxAgent {
             }
         }else {
             if(attackPos!=-1)
-                availableMoves = board.findAllMoves(playerInfo.getColor());
+                availableMoves = board.findAllMoves(playerColor);
             //for each call max and find min
             for (Move move : availableMoves) {
                 ArrayList<Move> clone = (ArrayList<Move>) movesBefore.clone();
@@ -149,7 +147,7 @@ public class MiniMaxAgent {
 
 
     private double getUtility(Board board){
-        return playerInfo.getColor().equals("RED") ? board.getHeuristic() : -board.getHeuristic();
+        return playerColor == CELL_COLOR.RED ? board.getHeuristic() : -board.getHeuristic();
     }
 
 

@@ -1,6 +1,6 @@
 public class PlayerInfo {
     private String token;
-    private String color;
+    private CELL_COLOR color;
 
     public String getToken() {
         return token;
@@ -10,11 +10,11 @@ public class PlayerInfo {
         this.token = token;
     }
 
-    public String getColor() {
+    public CELL_COLOR getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(CELL_COLOR color) {
         this.color = color;
     }
 }

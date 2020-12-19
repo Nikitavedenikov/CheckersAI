@@ -38,7 +38,7 @@ public class Board {
             for(int j = 0; j < C_SIZE; j++){
                 pos = getPosition(i,j);
                 if(board[pos-1] == null)
-                    board[pos-1] = new Cell("EMPTY", i, j,false,pos);
+                    board[pos-1] = new Cell(CELL_COLOR.EMPTY, i, j,false,pos);
             }
         }
     }
@@ -59,7 +59,7 @@ public class Board {
         return res;
     }
 
-    public ArrayList<Move> findAllMoves(String playerColor) {
+    public ArrayList<Move> findAllMoves(CELL_COLOR playerColor) {
         ArrayList<Move> result = new ArrayList<>();
 
         for (Cell cell: board) {
@@ -123,14 +123,14 @@ __________$$$
 __________$$$$$$$
 ____________$$$$$$$$
      */
-    public ArrayList<Move> findMoves(String playerColor, Cell cell) {
+    public ArrayList<Move> findMoves(CELL_COLOR playerColor, Cell cell) {
         ArrayList<Move> result = new ArrayList<>();
         //find valid not ling moves
-        String enemyColor = playerColor.equals("RED") ? "BLACK" : "RED";
+        CELL_COLOR enemyColor = playerColor == CELL_COLOR.RED ? CELL_COLOR.BLACK : CELL_COLOR.RED;
         Move move;
 
         if(!cell.isKing()){
-            if(cell.getColor().equals("RED")){
+            if(cell.getColor() == CELL_COLOR.RED){
                 //↗           BBePx
                 move = findMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpRight);
                 if(move!=null)
@@ -234,7 +234,7 @@ ____________$$$$$$$$
     }
 
 
-    private Move findMove(int startPos, int row, int col, String enemyColor, Direction dir){
+    private Move findMove(int startPos, int row, int col, CELL_COLOR enemyColor, Direction dir){
         int pos;
         int killPos;
 
@@ -244,7 +244,7 @@ ____________$$$$$$$$
         int i = row + rowChange, j = func.method(row,col);
         if(i < R_SIZE && i >=0 && j>=0 && j < C_SIZE){
             pos = getPosition(i,j);
-            if(board[pos-1].getColor().equals("EMPTY")){
+            if(board[pos-1].getColor() == CELL_COLOR.EMPTY){
                 return new Move(startPos, pos);
             }else if(board[pos-1].getColor().equals(enemyColor)){
                 //Move one more
@@ -259,7 +259,7 @@ ____________$$$$$$$$
                     pos = getPosition(i, j);
 
                     //if empty make move
-                    if (board[pos - 1].getColor().equals("EMPTY")) {
+                    if (board[pos - 1].getColor() == CELL_COLOR.EMPTY) {
                         return new Move(startPos, pos, true, killPos);
                     }
                 }
@@ -273,11 +273,11 @@ ____________$$$$$$$$
         ArrayList<Move> result = new ArrayList<>();
         Cell cell = board[position-1];
 
-        String enemyColor = cell.getColor().equals("RED") ? "BLACK" : "RED";
+        CELL_COLOR enemyColor = cell.getColor() == CELL_COLOR.RED ? CELL_COLOR.BLACK : CELL_COLOR.RED;
         Move move;
 
         if(!cell.isKing()){
-            if(cell.getColor().equals("RED")){
+            if(cell.getColor()== CELL_COLOR.RED){
                 //↗           BBePx
                 move = findAttackMove(cell.getPosition(), cell.getRow(), cell.getColumn(), enemyColor, Direction.UpRight);
                 if(move!=null)
@@ -319,7 +319,7 @@ ____________$$$$$$$$
         return result;
     }
 
-    public Move findAttackMove(int startPos, int row, int col, String enemyColor, Direction dir){
+    public Move findAttackMove(int startPos, int row, int col, CELL_COLOR enemyColor, Direction dir){
         int pos;
         int killPos;
 
@@ -329,7 +329,7 @@ ____________$$$$$$$$
         int i = row + rowChange, j = func.method(row,col);
         if(i < R_SIZE && i >=0 && j>=0 && j < C_SIZE){
             pos = getPosition(i,j);
-            if(board[pos-1].getColor().equals(enemyColor)){
+            if(board[pos-1].getColor() == enemyColor){
                 //Move one more
 
                 j = func.method(i, j);
@@ -341,7 +341,7 @@ ____________$$$$$$$$
                     pos = getPosition(i, j);
 
                     //if empty make move
-                    if (board[pos - 1].getColor().equals("EMPTY")) {
+                    if (board[pos - 1].getColor() == CELL_COLOR.EMPTY) {
                         return new Move(startPos, pos, true, killPos);
                     }
                 }
@@ -396,8 +396,8 @@ ____________$$$$$$$$
         int[] res = new int[7];
 
         for (Cell cell : board){
-            if(!cell.getColor().equals("EMPTY")){
-                if(cell.getColor().equals("RED")){
+            if(cell.getColor() != CELL_COLOR.EMPTY){
+                if(cell.getColor() == CELL_COLOR.RED){
                     if(cell.isKing())
                         res[1]++;
                     else
@@ -430,20 +430,20 @@ ____________$$$$$$$$
                         // Check if can be taken this turn
                         if (row < 7) {
                             if (col > 0 && col < 3) {
-                                if (board[upRight].getColor().equals("BLACK")
-                                        && board[downLeft].getColor().equals("EMPTY")) {
+                                if (board[upRight].getColor()== CELL_COLOR.BLACK
+                                        && board[downLeft].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]++;
                                 }
-                                if (board[downRight].getColor().equals("BLACK")
-                                        && board[upLeft].getColor().equals("EMPTY")) {
+                                if (board[downRight].getColor()== CELL_COLOR.BLACK
+                                        && board[upLeft].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]++;
                                 }
-                                if (board[upLeft].getColor().equals("BLACK") && board[upLeft].isKing()
-                                        && board[downRight].getColor().equals("EMPTY")) {
+                                if (board[upLeft].getColor() == CELL_COLOR.BLACK && board[upLeft].isKing()
+                                        && board[downRight].getColor() == CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
-                                if (board[downLeft].getColor().equals("BLACK") && board[downLeft].isKing()
-                                        && board[upRight].getColor().equals("EMPTY")) {
+                                if (board[downLeft].getColor() == CELL_COLOR.BLACK && board[downLeft].isKing()
+                                        && board[upRight].getColor() == CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
                             }
@@ -455,8 +455,8 @@ ____________$$$$$$$$
                                 res[6]++;
                             }
                             else {
-                                if ((board[upLeft].getColor().equals("RED") || !board[upLeft].isKing()) &&
-                                    (board[downLeft].getColor().equals("RED") || !board[downLeft].isKing())) {
+                                if ((board[upLeft].getColor()== CELL_COLOR.RED || !board[upLeft].isKing()) &&
+                                    (board[downLeft].getColor()== CELL_COLOR.RED || !board[downLeft].isKing())) {
                                     res[6]++;
                                 }
                             }
@@ -495,20 +495,20 @@ ____________$$$$$$$$
                         // Check if can be taken this turn
                         if (row > 0) {
                             if (col > 0 && col < 3) {
-                                if (board[upLeft].getColor().equals("RED")
-                                        && board[downRight].getColor().equals("EMPTY")) {
+                                if (board[upLeft].getColor() == CELL_COLOR.RED
+                                        && board[downRight].getColor() == CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
-                                if (board[downLeft].getColor().equals("RED")
-                                        && board[upRight].getColor().equals("EMPTY")) {
+                                if (board[downLeft].getColor()== CELL_COLOR.RED
+                                        && board[upRight].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
-                                if (board[upRight].getColor().equals("RED") && board[upRight].isKing()
-                                        && board[downLeft].getColor().equals("EMPTY")) {
+                                if (board[upRight].getColor()== CELL_COLOR.RED && board[upRight].isKing()
+                                        && board[downLeft].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
-                                if (board[downRight].getColor().equals("RED") && board[downRight].isKing()
-                                        && board[upLeft].getColor().equals("EMPTY")) {
+                                if (board[downRight].getColor()== CELL_COLOR.RED && board[downRight].isKing()
+                                        && board[upLeft].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
                             }
@@ -521,8 +521,8 @@ ____________$$$$$$$$
                             }
                             else {
                                 //TODO: check
-                                if ((board[upRight].getColor().equals("BLACK") || !board[upRight].isKing()) &&
-                                        (board[downRight].getColor().equals("BLACK") || !board[downRight].isKing())) {
+                                if ((board[upRight].getColor()== CELL_COLOR.BLACK || !board[upRight].isKing()) &&
+                                        (board[downRight].getColor()== CELL_COLOR.BLACK || !board[downRight].isKing())) {
                                     res[6]--;
                                 }
                             }

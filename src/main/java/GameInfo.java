@@ -1,6 +1,6 @@
 public class GameInfo {
     private String status;
-    private String whose_turn;
+    private CELL_COLOR whose_turn;
     private String winner;
 
     private Cell[] board;
@@ -11,7 +11,7 @@ public class GameInfo {
 
     public static final int SIZE = 32;
 
-    public GameInfo(String status, String whose_turn, String winner, Cell[] board, double available_time, boolean is_started, boolean is_finished) {
+    public GameInfo(String status, CELL_COLOR whose_turn, String winner, Cell[] board, double available_time, boolean is_started, boolean is_finished) {
         this.status = status;
         this.whose_turn = whose_turn;
         this.winner = winner;
@@ -27,7 +27,7 @@ public class GameInfo {
         return status;
     }
 
-    public String getWhose_turn() {
+    public CELL_COLOR getWhose_turn() {
         return whose_turn;
     }
 
@@ -54,7 +54,7 @@ public class GameInfo {
 }
 
 class Cell{
-    private String color;
+    private CELL_COLOR color;
     private int row;
     private int column;
     private boolean king;
@@ -67,7 +67,7 @@ class Cell{
         this(c.getColor(), c.getRow(), c.getColumn(), c.isKing(), c.getPosition());
     }
 
-    public Cell(String color, int row, int column, boolean king, int position) {
+    public Cell(CELL_COLOR color, int row, int column, boolean king, int position) {
         this.color = color;
         this.row = row;
         this.column = column;
@@ -82,11 +82,11 @@ class Cell{
     }
 
     public void clearCell(){
-        this.color = "EMPTY";
+        this.color = CELL_COLOR.EMPTY;
         this.king = false;
     }
 
-    public String getColor() {
+    public CELL_COLOR getColor() {
         return color;
     }
 

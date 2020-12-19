@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Board {
-    private Cell[] board;
+    private final Cell[] board;
     public final int R_SIZE = 8;
     public final int C_SIZE = 4;
 
@@ -455,8 +455,8 @@ ____________$$$$$$$$
                                 res[6]++;
                             }
                             else {
-                                if ((board[upLeft].getColor()== CELL_COLOR.RED || !board[upLeft].isKing()) &&
-                                    (board[downLeft].getColor()== CELL_COLOR.RED || !board[downLeft].isKing())) {
+                                if(!(board[upLeft].getColor()== CELL_COLOR.EMPTY || (board[upLeft].getColor()== CELL_COLOR.BLACK && board[upLeft].isKing())) &&
+                                        !(board[downLeft].getColor()== CELL_COLOR.EMPTY || (board[downLeft].getColor()== CELL_COLOR.BLACK && board[downLeft].isKing()))){
                                     res[6]++;
                                 }
                             }
@@ -520,9 +520,8 @@ ____________$$$$$$$$
                                 res[6]--;
                             }
                             else {
-                                //TODO: check
-                                if ((board[upRight].getColor()== CELL_COLOR.BLACK || !board[upRight].isKing()) &&
-                                        (board[downRight].getColor()== CELL_COLOR.BLACK || !board[downRight].isKing())) {
+                                if(!(board[upRight].getColor()== CELL_COLOR.EMPTY || (board[upRight].getColor()== CELL_COLOR.RED && board[upRight].isKing())) &&
+                                        !(board[downRight].getColor()== CELL_COLOR.EMPTY || (board[downRight].getColor()== CELL_COLOR.RED && board[downRight].isKing()))){
                                     res[6]--;
                                 }
                             }

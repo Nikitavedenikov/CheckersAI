@@ -4,8 +4,6 @@ public class Move {
     private boolean isAttack;
     private int killPosition;
 
-    private double value;
-
     public Move(int from, int to) {
         this.from = from;
         this.to = to;
@@ -50,11 +48,6 @@ public class Move {
 
     public void setKillPosition(int killPosition) {
         this.killPosition = killPosition;
-    }
-
-    public Move setValue(double value){
-        this.value = value;
-        return this;
     }
 
     @Override

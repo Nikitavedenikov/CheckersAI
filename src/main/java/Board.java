@@ -5,7 +5,13 @@ public class Board {
     public final int R_SIZE = 8;
     public final int C_SIZE = 4;
 
-
+    // 0 - normal
+    // 1 - damka
+    // 2 - last rows (0 and 7)
+    // 3 - center box (rows 3 and 4 and columns 1 and 2)
+    // 4 - center 2 rows, first or last col
+    // 5 - can be attacked
+    // 6 - in safe place
     private final double[] coef = { 5.0, 7.75, 5.0, 2.5, 0.5, -3.0, 3.0 };
 
     public Board (Board b){
@@ -24,15 +30,6 @@ public class Board {
 
         }
 
-        /*
-                              .
-        ---\    __            |\
-            \__/__\___________| \_
-            |   ___    |  ,|   ___`-.
-            |  /   \   |___/  /   \  `-.
-            |_| (O) |________| (O) |____|
-               \___/          \___/
-         */
         int pos;
         for (int i = 0; i < R_SIZE; i++) {
             for(int j = 0; j < C_SIZE; j++){
@@ -70,59 +67,7 @@ public class Board {
         return result;
     }
 
-    /*
-    __________________$$$
-___________________$$$$
-____________________$$$$$
-_____________________$$$$$
-___________________$$$$$$$
-__________________$$$$$$$$
-__________________$$$$$$$
-_________$$$$___$$$$$$$$$
-__________$$$$__$$$$$$$$
-___________$$$$$$$$$$$$$
-___________$$$$$$$$$$$$
-________$$$$$$$$$$$$$$$
-__$$$$$$$$$$$$$$$$$$$$
-$$$$$$$$$$$$$$$$$$$$$$
-$$$$$$$$$$$$$$$$$$$$$
-$$$$$$$$$___$$$$$$$$
-$$$$$$$_____$$$$$$$$
-_$$$$$$$____$$$$$$$$
-_$$$$$$$$__$$$$$$$$$
-_$$$$$$$$$_$$$$$$$$$
-__$$$$$$$$$$$$$$$$$
-__$$$$$$$$$$$$$$$$
-__$$$$$$$$$$$$$$$$
-__$$$$$$$$$$$$$$$
-__$$$$$$$$$$$$$$$
-___$$$$$$$$$$$$$$
-____$$$$$$$$$$$$$$$
-____$$$$$$$$$$$$$$$$$
-____$$$$$$$$$$$$_$$$$$
-____$$$$$$$$$$$$__$$$$$
-___$$$$$$$$$$$$$$__$$$$$
-___$$$$$$$$$$$$$$___$$$$$$
-____$$$$$$$$$$$$$$$$$$$$$$
-_____$$$$$$$$$$$$$$$$$$$$
-______$$$$$$$$$$$$$$$$$
-______$$$$$$$$$$$$$$$$
-_______$$$$$$$$$$$$$$$
-_______$$$$$$$$$$$$$$
-_________$$$$$$$$$$$$$$
-_________$$$$$$$$$$$$$$$
-_________$$$$$$$$$$$$$$$$
-_________$$$$$$$$$$$$$$$$
-_________$$$$$___$$$$$$$
-_________$$$$$
-_________$$$$$
-_________$$$$$
-_________$$$$$
-_________$$$$
-__________$$$
-__________$$$$$$$
-____________$$$$$$$$
-     */
+
     public ArrayList<Move> findMoves(CELL_COLOR playerColor, Cell cell) {
         ArrayList<Move> result = new ArrayList<>();
         //find valid not ling moves
@@ -149,65 +94,6 @@ ____________$$$$$$$$
                 if(move!=null)
                     result.add(move);
             }
-//            int row = cell.getRow() + rowChange;
-//            if(row >= 0 && row < R_SIZE){
-//
-//                //↙↘           daun
-//                int col = getDown(cell.getRow(), cell.getColumn());
-//                int pos = getPosition(row,col);
-//
-//                if(col < C_SIZE ){
-//                    Cell n_cell = board[pos-1];
-//
-//                    if(n_cell.getColor().equals(enemyColor)){
-//                        //↙↘           daun one more
-//                        int killPos = pos;
-//
-//                        col = getDown(row,col);
-//                        row += rowChange;
-//                        pos = getPosition(row,col);
-//
-//                        if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE){
-//                            n_cell = board[pos-1];
-//
-//                            //if empty make move
-//                            if(n_cell.getColor().equals("EMPTY")){
-//                                result.add(new Move(cell.getPosition(), pos, true,killPos));
-//                            }
-//                        }
-//
-//                    }else if(n_cell.getColor().equals("EMPTY")){
-//                        result.add(new Move(cell.getPosition(), pos));
-//                    }
-//                }
-//
-//                //↖↗           BBePx
-//                row = cell.getRow() + rowChange;
-//                col = getUp(cell.getRow(),cell.getColumn());
-//                pos = getPosition(row,col);
-//                if(col >=0){
-//                    Cell n_cell = board[pos-1];
-//
-//                    if(n_cell.getColor().equals(enemyColor)){
-//                        //↖↗           BBePx one more
-//                        int killPos = pos;
-//
-//                        col = getUp(row,col);
-//                        row += rowChange;
-//                        pos = getPosition(row,col);
-//                        if(row < R_SIZE && row>=0 && col >= 0 && col < C_SIZE) {
-//                            n_cell = board[pos - 1];
-//
-//                            //if empty make move
-//                            if (n_cell.getColor().equals("EMPTY")) {
-//                                result.add(new Move(cell.getPosition(), pos, true, killPos));
-//                            }
-//                        }
-//                    }else if(n_cell.getColor().equals("EMPTY")){
-//                        result.add(new Move(cell.getPosition(), pos));
-//                    }
-//                }
-//            }
 
         }else{
             //find valid king moves
@@ -359,40 +245,7 @@ ____________$$$$$$$$
     }
 
 
-    /*
-    _$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    _$$$$$$$$$$$$$$$$$__$$$$$$$$$$$$$$$$
-    _$$$$$$$$$$$$$$$$____$$$$$$$$$$$$$$$
-    _$$$$___$$$$$$$$$____$$$$$$$$$___$$$
-    _$$$$_____$$$$$$$____$$$$$$$_____$$$
-    _$$$$___$__$$$$$$____$$$$$$______$$$
-    _$$$$___$$__$$$$$____$$$$$__$$___$$$
-    _$$$$___$$___$$$$$__$$$$$___$$___$$$
-    _$$$$___$$___$$$$$__$$$$$__$$$___$$$
-    _$$$$___$$$__$$$$$__$$$$$__$$$___$$$
-    _$$$$___$$$__$$$$____$$$$__$$$___$$$
-    _$$$$___$$$___$$$____$$$___$$$___$$$
-    _$$$$___$$____$$______$$____$$___$$$
-    _$$$$______$$$$$__$$__$$$$$______$$$
-    _$$$$___$___$$$__$$$$__$$$___$___$$$
-    _$$$$___$$_______$$$$_______$$___$$$
-    _$$$$___$$$$$__$______$__$$$$$___$$$
-    _$$$$___$$$$$__$$$__$$$__$$$$$___$$$
-    _$$$$____________________________$$$
-    _$$$$$$$$$$$$___$$__$$___$$$$$$$$$$$
-    _$$$$$$$$$$$$$___$__$___$$$$$$$$$$$$
-    __$$$$$$$$$$$$$________$$$$$$$$$$$$$
-    ______$$$$$$$$$$$____$$$$$$$$$$$____
-    __________$$$$$$$$$$$$$$$$$$________
-     */
     public double getHeuristic(){
-        // 0: pawns --- 5
-        // 1: kings --- 7.75
-        // 2: back row --- 5
-        // 3: middle box --- 2.5
-        // 4: middle 2 rows, not box --- 0.5
-        // 5: can be taken this turn --- -3
-        // 6: protected --- 3
         int[] res = new int[7];
 
         for (Cell cell : board){
@@ -408,7 +261,6 @@ ____________$$$$$$$$
 
                     if(row==0 || row==7){
                         res[2]++;
-                        //res[6]++;
                     }else{
                         // Check for middle rows
                         if (row == 3 || row == 4) {
@@ -473,7 +325,6 @@ ____________$$$$$$$$
 
                     if(row==7 || row==0){
                         res[2]--;
-                        //res[6]--;
                     }else{
                         // Check for middle rows
                         if (row == 3 || row == 4) {

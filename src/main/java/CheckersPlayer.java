@@ -6,6 +6,8 @@ import java.io.IOException;
 public class CheckersPlayer implements Runnable{
 
     private static final int DEPTH = 6;
+    private static final long SLEEP_TIME = 500;
+
     private PlayerInfo playerInfo;
     private GameInfo gameInfo;
     private MiniMaxAgent agent;
@@ -15,7 +17,7 @@ public class CheckersPlayer implements Runnable{
     public void connectToGame() throws IOException {
         HttpPostRaw post = new HttpPostRaw("http://localhost:8081/game?team_name="+BOT_NAME, "utf-8");
         post.addHeader("Accept", "application/json");
-        post.setPostData("dick");
+        post.setPostData("post");
         String response = post.finish();
         System.out.println(response);
 
@@ -58,13 +60,13 @@ public class CheckersPlayer implements Runnable{
         while(gameInfo.is_started() && !gameInfo.is_finished()){
             if(gameInfo.getWhose_turn() != playerInfo.getColor()){
                 agent.resetLastMove();
-                Thread.sleep(1000);
+                Thread.sleep(SLEEP_TIME);
             }
             else{
                 //your move
                 Move move = agent.MinimaxDecision(board, DEPTH);
 
-                System.out.println("Move : " + move.toString());
+                System.out.println("RES Move : " + move.toString());
                 move(move.getFrom(), move.getTo());
             }
 

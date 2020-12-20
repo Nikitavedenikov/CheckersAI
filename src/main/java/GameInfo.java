@@ -21,8 +21,6 @@ public class GameInfo {
         this.is_finished = is_finished;
     }
 
-    private int[] allCells;
-
     public String getStatus() {
         return status;
     }

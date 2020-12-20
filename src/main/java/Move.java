@@ -1,20 +1,22 @@
 public class Move {
     private int from;
     private int to;
-    private boolean isEbashylovo;
+    private boolean isAttack;
     private int killPosition;
+
+    private double value;
 
     public Move(int from, int to) {
         this.from = from;
         this.to = to;
-        this.isEbashylovo = false;
+        this.isAttack = false;
         killPosition = -1;
     }
 
-    public Move(int from, int to, boolean isEbashylovo, int killPosition) {
+    public Move(int from, int to, boolean isAttack, int killPosition) {
         this.from = from;
         this.to = to;
-        this.isEbashylovo = isEbashylovo;
+        this.isAttack = isAttack;
         this.killPosition = killPosition;
     }
 
@@ -34,12 +36,12 @@ public class Move {
         this.to = to;
     }
 
-    public boolean isEbashylovo() {
-        return isEbashylovo;
+    public boolean isAttack() {
+        return isAttack;
     }
 
-    public void setEbashylovo(boolean ebashylovo) {
-        isEbashylovo = ebashylovo;
+    public void setAttack(boolean attack) {
+        isAttack = attack;
     }
 
     public int getKillPosition() {
@@ -50,10 +52,15 @@ public class Move {
         this.killPosition = killPosition;
     }
 
+    public Move setValue(double value){
+        this.value = value;
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder strbd = new StringBuilder();
-        strbd.append("From : ").append(from).append("\tTo : ").append(to).append("\tEbashylovo : ").append(isEbashylovo);
+        strbd.append("From : ").append(from).append("\tTo : ").append(to).append("\tAttack : ").append(isAttack);
         return strbd.toString();
 
     }

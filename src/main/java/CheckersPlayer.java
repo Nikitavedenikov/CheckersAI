@@ -10,8 +10,10 @@ public class CheckersPlayer implements Runnable{
     private GameInfo gameInfo;
     private MiniMaxAgent agent;
 
+    private static final String BOT_NAME = "Киану_Ривз";
+
     public void connectToGame() throws IOException {
-        HttpPostRaw post = new HttpPostRaw("http://localhost:8081/game?team_name=Loom", "utf-8");
+        HttpPostRaw post = new HttpPostRaw("http://localhost:8081/game?team_name="+BOT_NAME, "utf-8");
         post.addHeader("Accept", "application/json");
         post.setPostData("dick");
         String response = post.finish();
@@ -50,16 +52,17 @@ public class CheckersPlayer implements Runnable{
     private void playGame() throws IOException, InterruptedException {
         getGameInfo();
         Board board = new Board(gameInfo.getBoard());
-        int depth = playerInfo.getColor() == CELL_COLOR.RED ? 4 : 4;
+
         agent = new MiniMaxAgent(playerInfo);
         //System.out.println("play game" + gameInfo.getStatus());
         while(gameInfo.is_started() && !gameInfo.is_finished()){
             if(gameInfo.getWhose_turn() != playerInfo.getColor()){
+                agent.resetLastMove();
                 Thread.sleep(1000);
             }
             else{
                 //your move
-                Move move = agent.MinimaxDecision(board,depth);
+                Move move = agent.MinimaxDecision(board,6);
 
                 System.out.println("Move : " + move.toString());
                 move(move.getFrom(), move.getTo());
@@ -71,20 +74,21 @@ public class CheckersPlayer implements Runnable{
         }
     }
 
-    public static void main(String[] args) throws IOException {
-
-        Thread first = new Thread(new CheckersPlayer());
-        Thread second = new Thread(new CheckersPlayer());
-
-        first.start();
-        second.start();
-    }
-
-//    public static void main(String[] args) throws IOException, InterruptedException {
-//        CheckersPlayer player = new CheckersPlayer();
-//        player.playGame();
+//    public static void main(String[] args) throws IOException {
 //
+//        Thread first = new Thread(new CheckersPlayer());
+//        Thread second = new Thread(new CheckersPlayer());
+//
+//        first.start();
+//        second.start();
 //    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        CheckersPlayer player = new CheckersPlayer();
+        player.connectToGame();
+        player.playGame();
+
+    }
 
     @Override
     public void run() {

@@ -6,7 +6,7 @@ public class Board {
     public final int C_SIZE = 4;
 
 
-    private final double[] coef = { 5, 7.75, 4, 2.5, 0.5, -3, 3 };
+    private final double[] coef = { 5.0, 7.75, 5.0, 2.5, 0.5, -3.0, 3.0 };
 
     public Board (Board b){
         Cell[] arr = new Cell[b.board.length];
@@ -46,7 +46,7 @@ public class Board {
     public Board makeMove(Move move){
         Board res = new Board(this);
 
-        if(move.isEbashylovo()){
+        if(move.isAttack()){
             res.board[move.getKillPosition()-1].clearCell();
         }
 
@@ -388,7 +388,7 @@ ____________$$$$$$$$
     public double getHeuristic(){
         // 0: pawns --- 5
         // 1: kings --- 7.75
-        // 2: back row --- 4
+        // 2: back row --- 5
         // 3: middle box --- 2.5
         // 4: middle 2 rows, not box --- 0.5
         // 5: can be taken this turn --- -3
@@ -406,9 +406,9 @@ ____________$$$$$$$$
                     int row = cell.getRow();
                     int col = cell.getColumn();
 
-                    if(row==0){
+                    if(row==0 || row==7){
                         res[2]++;
-                        res[6]++;
+                        //res[6]++;
                     }else{
                         // Check for middle rows
                         if (row == 3 || row == 4) {
@@ -434,17 +434,17 @@ ____________$$$$$$$$
                                         && board[downLeft].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]++;
                                 }
-                                if (board[downRight].getColor()== CELL_COLOR.BLACK
+                                else if (board[downRight].getColor()== CELL_COLOR.BLACK
                                         && board[upLeft].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]++;
                                 }
-                                if (board[upLeft].getColor() == CELL_COLOR.BLACK && board[upLeft].isKing()
+                                else if (board[upLeft].getColor() == CELL_COLOR.BLACK && board[upLeft].isKing()
                                         && board[downRight].getColor() == CELL_COLOR.EMPTY) {
-                                    res[5]--;
+                                    res[5]++;
                                 }
-                                if (board[downLeft].getColor() == CELL_COLOR.BLACK && board[downLeft].isKing()
+                                else if (board[downLeft].getColor() == CELL_COLOR.BLACK && board[downLeft].isKing()
                                         && board[upRight].getColor() == CELL_COLOR.EMPTY) {
-                                    res[5]--;
+                                    res[5]++;
                                 }
                             }
                         }
@@ -471,9 +471,9 @@ ____________$$$$$$$$
                     int row = cell.getRow();
                     int col = cell.getColumn();
 
-                    if(row==7){
+                    if(row==7 || row==0){
                         res[2]--;
-                        res[6]--;
+                        //res[6]--;
                     }else{
                         // Check for middle rows
                         if (row == 3 || row == 4) {
@@ -499,15 +499,15 @@ ____________$$$$$$$$
                                         && board[downRight].getColor() == CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
-                                if (board[downLeft].getColor()== CELL_COLOR.RED
+                                else if (board[downLeft].getColor()== CELL_COLOR.RED
                                         && board[upRight].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
-                                if (board[upRight].getColor()== CELL_COLOR.RED && board[upRight].isKing()
+                                else if (board[upRight].getColor()== CELL_COLOR.RED && board[upRight].isKing()
                                         && board[downLeft].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }
-                                if (board[downRight].getColor()== CELL_COLOR.RED && board[downRight].isKing()
+                                else if (board[downRight].getColor()== CELL_COLOR.RED && board[downRight].isKing()
                                         && board[upLeft].getColor()== CELL_COLOR.EMPTY) {
                                     res[5]--;
                                 }

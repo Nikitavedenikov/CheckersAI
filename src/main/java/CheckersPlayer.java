@@ -5,7 +5,10 @@ import java.io.IOException;
 
 public class CheckersPlayer implements Runnable{
 
-    private static final int DEPTH = 6;
+    //if 3 seconds for move - DEPTH = 6
+    //if 5 seconds for move - DEPTH = 8
+    //if 10 seconds for move - DEPTH = 9
+    private static final int DEPTH = 9;
     private static final long SLEEP_TIME = 500;
 
     private PlayerInfo playerInfo;

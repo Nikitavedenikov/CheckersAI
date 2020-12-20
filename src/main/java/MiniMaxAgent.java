@@ -1,12 +1,12 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MiniMaxAgent {
 
-    public static final long TIME_FOR_MOVE = 3000;
-
     private final CELL_COLOR playerColor;
 
-    private Tree<Move> movesTree;
+    //private Tree<Move> movesTree;
 
     private Move lastAttackMove = null;
 
@@ -18,11 +18,13 @@ public class MiniMaxAgent {
         double value = Double.NEGATIVE_INFINITY;
 
         ArrayList<Move> availableMoves = board.findAllMoves(playerColor);
+
         Move res = availableMoves.get(0);
 
-        movesTree = new Tree<>(res);
+        //movesTree = new Tree<>(res);
 
         if(availableMoves.stream().anyMatch(Move::isAttack)) {
+
             //for each call min and find max
             for(Move move: availableMoves){
                 if(!move.isAttack())
@@ -31,14 +33,13 @@ public class MiniMaxAgent {
                 if(lastAttackMove!=null && lastAttackMove.getTo() != move.getFrom())
                     continue;
 
-                movesTree.addLeaf(move);
-                double currentValue = Double.max(value,Max(depth,  board.makeMove(move), Double.NEGATIVE_INFINITY,move.getTo(),move));
-                move.setValue(currentValue);
+//                movesTree.addLeaf(move);
+                double currentValue = Double.max(value,Max(depth,  board.makeMove(move), Double.NEGATIVE_INFINITY,move.getTo()));
+//                move.setValue(currentValue);
 
                 if(currentValue > value){
                     value = currentValue;
                     res = move;
-
                     lastAttackMove = res;
                 }
 
@@ -48,12 +49,12 @@ public class MiniMaxAgent {
         }else{
             for(Move move: availableMoves){
 
-                movesTree.addLeaf(move);
+//                movesTree.addLeaf(move);
                 //System.out.println("sda");
-                double currentValue = Min(depth, board.makeMove(move), value,-1,move);
-                move.setValue(currentValue);
+                double currentValue = Min(depth, board.makeMove(move), value,-1);
+//                move.setValue(currentValue);
 
-                if(currentValue > value && currentValue!= Double.POSITIVE_INFINITY){
+                if(currentValue > value){
                     value = currentValue;
                     res = move;
                 }
@@ -63,11 +64,12 @@ public class MiniMaxAgent {
 
             lastAttackMove = null;
         }
+
         System.out.println("RES: Move " + res.toString() + "    Value " + value);
         return res;
     }
 
-    public double Max(int depth, Board board, double minValue, int attackPos, Move lastMove){
+    public double Max(int depth, Board board, double minValue, int attackPos){
 
         //check depth
         if(depth==0)
@@ -87,22 +89,22 @@ public class MiniMaxAgent {
             for(Move move: availableMoves){
                 if(!move.isAttack())
                     continue;
-                movesTree.addLeaf(lastMove,move);
+//                movesTree.addLeaf(lastMove,move);
 
                 Board boardClone = board.makeMove(move);
-                value = Double.max(value,Max(depth-1, boardClone , Double.NEGATIVE_INFINITY, move.getTo(), move));
-                move.setValue(value);
+                value = Double.max(value,Max(depth-1, boardClone , Double.NEGATIVE_INFINITY, move.getTo()));
+//                move.setValue(value);
             }
         }
         else{
             if(attackPos!=-1) {
-                value = Double.max(value,Min(depth-1,  board, value,-1, lastMove));
+                value = Double.max(value,Min(depth-1,  board, value,-1));
             }else{
                 //for each call min and find max
                 for(Move move: availableMoves){
-                    movesTree.addLeaf(lastMove,move);
-                    value = Double.max(value,Min(depth-1,  board.makeMove(move), value,-1, move));
-                    move.setValue(value);
+//                    movesTree.addLeaf(lastMove,move);
+                    value = Double.max(value,Min(depth-1,  board.makeMove(move), value,-1));
+//                    move.setValue(value);
 
                     //System.out.println("max : " + value);
                     if(value>=minValue) break;
@@ -115,7 +117,7 @@ public class MiniMaxAgent {
         return value;
     }
 
-    public double Min(int depth, Board board, double maxValue, int attackPos, Move lastMove){
+    public double Min(int depth, Board board, double maxValue, int attackPos){
         //System.out.println("");
 
         //check depth
@@ -137,20 +139,20 @@ public class MiniMaxAgent {
             for(Move move: availableMoves){
                 if(!move.isAttack())
                     continue;
-                movesTree.addLeaf(lastMove,move);
+//                movesTree.addLeaf(lastMove,move);
                 Board boardClone = board.makeMove(move);
-                value = Double.min(value,Min(depth - 1, boardClone , Double.POSITIVE_INFINITY, move.getTo(),move));
-                move.setValue(value);
+                value = Double.min(value,Min(depth - 1, boardClone , Double.POSITIVE_INFINITY, move.getTo()));
+//                move.setValue(value);
             }
         }else {
             if(attackPos!=-1)
-                value = Double.min(value, Max(depth - 1, board, value, -1, lastMove));
+                value = Double.min(value, Max(depth - 1, board, value, -1));
             else {
                 //for each call max and find min
                 for (Move move : availableMoves) {
-                    movesTree.addLeaf(lastMove, move);
-                    value = Double.min(value, Max(depth - 1, board.makeMove(move), value, -1, move));
-                    move.setValue(value);
+//                    movesTree.addLeaf(lastMove, move);
+                    value = Double.min(value, Max(depth - 1, board.makeMove(move), value, -1));
+//                    move.setValue(value);
 
                     //System.out.println("min : " + value);
                     if (value <= maxValue) break;
